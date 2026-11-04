@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Etsy Product Hunter — demand mining &amp; opportunity scoring</title>
+<meta name="description" content="Find real demand-backed physical products on Etsy: demand mining, competition analysis, opportunity scoring, watchlist tracking.">
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="30" height="30"><circle cx="14" cy="14" r="9" fill="none" stroke="#f1641e" stroke-width="3"/><line x1="21" y1="21" x2="29" y2="29" stroke="#f1641e" stroke-width="3" stroke-linecap="round"/><path d="M11 11l6 6M17 11l-6 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+      </span>
+      <div>
+        <h1>Etsy Product Hunter</h1>
+        <p>demand mining &middot; competition analysis &middot; opportunity scoring</p>
+      </div>
+    </div>
+    <div class="status-chips" id="statusChips" aria-label="data source status"></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="panel" aria-label="run a hunt">
+    <div class="panel-head">
+      <h2>Run a hunt</h2>
+      <p class="muted">Enter product keywords — the pipeline checks Google Trends, Etsy listings, competition pressure and eBay sold data, then ranks opportunities.</p>
+    </div>
+    <textarea id="kw" rows="2" placeholder="ceramic mug, wooden candle holder, macrame wall hanging"></textarea>
+    <div class="form-grid">
+      <label>Market
+        <select id="geo"><option value="US">US</option><option value="GB">GB</option><option value="CA">CA</option><option value="AU">AU</option></select>
+      </label>
+      <label>Price from $
+        <input id="plo" type="number" value="15" min="1" step="1">
+      </label>
+      <label>Price to $
+        <input id="phi" type="number" value="60" min="1" step="1">
+      </label>
+      <label>Listings / keyword
+        <input id="mc" type="number" value="24" min="4" max="50" step="1">
+      </label>
+      <label class="check"><input id="dig" type="checkbox"> <span>Include digital products</span></label>
+      <div class="run-cell">
+        <button id="runBtn" class="btn primary" onclick="startRun()">
+          <span class="btn-label">Run pipeline</span>
+        </button>
+      </div>
+    </div>
+    <div class="filter-row" id="filterRow" hidden>
+      <label>Min opportunity <input id="fMinOpp" type="number" value="0" step="0.1" min="0"></label>
+      <label>Max competition <input id="fMaxComp" type="number" value="100" step="1" min="0" max="100"></label>
+      <button class="btn ghost sm" onclick="applyFilters()">Apply</button>
+    </div>
+    <div id="jobStatus" class="job-status" role="status"></div>
+  </section>
+
+  <section class="panel" aria-label="ranked opportunities">
+    <div class="panel-head row-between">
+      <h2>Ranked opportunities</h2>
+      <span class="muted" id="resultMeta"></span>
+    </div>
+    <div id="results"><div class="empty">No run yet — start a hunt above.</div></div>
+  </section>
+
+  <section class="panel" aria-label="watchlist">
+    <div class="panel-head row-between">
+      <h2>Watchlist</h2>
+      <button class="btn ghost sm" onclick="snap()">Snapshot prices now</button>
+    </div>
+    <p class="muted">Track price &amp; favorites movement on the listings you care about.</p>
+    <div id="watch"></div>
+  </section>
+
+  <footer class="foot muted">
+    Research tool — scores are demand proxies (Trends interest, listing counts, favorites, eBay sold data), not a sales guarantee.
+    Data: Etsy API v3 &middot; eBay Finding API &middot; Google Trends.
+  </footer>
+</main>
+
+<div class="modal-backdrop" id="modalBackdrop" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-label="listing detail">
+    <button class="modal-close" onclick="closeModal()" aria-label="close">&times;</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

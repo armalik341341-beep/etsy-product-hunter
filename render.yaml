@@ -1,0 +1,18 @@
+# Render blueprint — deploys Etsy Product Hunter on the free tier.
+# Import via Render Dashboard: New → Blueprint → connect this repo.
+services:
+  - type: web
+    name: etsy-product-hunter
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      # Official Etsy API v3 key — format: keystring:shared_secret.
+      # Leave blank to use the scraper fallback (may be blocked from cloud IPs).
+      - key: ETSY_API_KEY
+        sync: false
+      # eBay Finding API Production App ID (real sold data). Optional.
+      - key: EBAY_APP_ID
+        sync: false
